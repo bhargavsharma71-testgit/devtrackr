@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: devtrackr-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: devtrackr
+  ports:
+    - port: 80
+      targetPort: 8000
