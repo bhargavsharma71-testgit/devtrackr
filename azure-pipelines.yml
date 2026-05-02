@@ -1,0 +1,52 @@
+trigger:
+- main
+
+variables:
+  imageRepository: devtrackr
+  containerRegistry: devtrackrregistry123.azurecr.io
+  dockerRegistryServiceConnection: devtrackrregistry123
+  kubernetesServiceConnection: notesapp-aks
+  tag: '$(Build.BuildId)'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+
+# =========================
+# BUILD & PUSH IMAGE
+# =========================
+- stage: Build
+  displayName: Build and Push Image
+  jobs:
+  - job: Build
+    steps:
+    - task: Docker@2
+      displayName: Build and Push
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: Dockerfile
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+# =========================
+# DEPLOY TO AKS
+# =========================
+- stage: Deploy
+  displayName: Deploy to AKS
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    steps:
+    - task: KubernetesManifest@0
+      displayName: Deploy
+      inputs:
+        action: deploy
+        kubernetesServiceConnection: $(kubernetesServiceConnection)
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+        containers: |
+          $(containerRegistry)/$(imageRepository):$(tag)
