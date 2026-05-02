@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: devtrackrapp 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devtrackrapp
+  template:
+    metadata:
+      labels:
+        app: devtrackrapp 
+    spec:
+      containers:
+        - name: devtrackrapp 
+          image: devtrackrregistry123.azurecr.io/devtrackrapp
+          ports:
+          - containerPort: 80
