@@ -8,4 +8,4 @@ spec:
     app: devtrackr
   ports:
     - port: 80
-      targetPort: 8000
+      targetPort: 5000
