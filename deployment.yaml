@@ -16,4 +16,4 @@ spec:
       - name: devtrackr
         image: devtrackrregistry123.azurecr.io/devtrackr-app:v1
         ports:
-        - containerPort: 8000
+        - containerPort: 5000
